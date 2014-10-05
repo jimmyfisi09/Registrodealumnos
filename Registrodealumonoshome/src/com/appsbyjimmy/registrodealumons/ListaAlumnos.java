@@ -6,9 +6,11 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
@@ -29,20 +31,26 @@ public class ListaAlumnos extends Activity{
     
       super.onCreate(savedInstanceState);
 	  setContentView(R.layout.listaalumnos);
-		
+	  
+	  lista=(ListView)findViewById(R.id.lista);	
+	  registerForContextMenu(lista);
+	  
 	  AlumnoDAO dao=new AlumnoDAO(this);
 	  
 	  List<Alumno> alumnos=dao.getlista();
 	  dao.close();
-	  int layout=android.R.layout.simple_list_item_1;
+	  //int layout=android.R.layout.simple_list_item_1;
+	  int layout=R.layout.linea_listade;
+	  //ArrayAdapter<Alumno> adapter= new ArrayAdapter<Alumno>(this,layout,alumnos);
+	  ListaAlumnosAdapter adapter=new ListaAlumnosAdapter(alumnos,this);
 	  
-	  ArrayAdapter<Alumno> adapter= new ArrayAdapter<Alumno>(this,layout,alumnos);
+	  /*LayoutInflater inflater =getLayoutInflater();*/
 	  
-	  lista=(ListView)findViewById(R.id.lista);
+	  
 	  
 	  lista.setAdapter(adapter);
 	  
-	  registerForContextMenu(lista);
+	  
 	  
 	  lista.setOnItemLongClickListener(new OnItemLongClickListener(){
 
@@ -74,9 +82,38 @@ public class ListaAlumnos extends Activity{
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		
-		menu.add("Matricular");
+		MenuItem llamar=menu.add("llamar");
+		llamar.setOnMenuItemClickListener(new OnMenuItemClickListener(){
+
+			@Override
+			public boolean onMenuItemClick(MenuItem arg0) {
+				Intent irParaTelefono= new Intent (Intent.ACTION_CALL);
+				Uri llamarA=Uri.parse("tel: "+alumno.getTelefono());
+				irParaTelefono.setData(llamarA);
+				startActivity(irParaTelefono);
+				return false;
+			}
+
+			
+			
+		});
+	
 		menu.add("Enviar sms");
-		menu.add("Visitra sitio web");
+		MenuItem site=menu.add("Visitar sitio web");
+		site.setOnMenuItemClickListener(new OnMenuItemClickListener(){
+
+			@Override
+			public boolean onMenuItemClick(MenuItem arg0) {
+				Intent irParaSite= new Intent(Intent.ACTION_VIEW);
+				Uri localsite=Uri.parse("http://"+alumno.getSite());
+				irParaSite.setData(localsite);
+				startActivity(irParaSite);
+				return false;
+			}
+
+			
+			
+		});
 		MenuItem eliminar=menu.add("Eliminar");
 		eliminar.setOnMenuItemClickListener(new OnMenuItemClickListener(){
 

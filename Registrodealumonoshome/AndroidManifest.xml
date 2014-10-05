@@ -5,9 +5,11 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="11"
         android:targetSdkVersion="19" />
-
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -31,6 +33,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <receiver android:name="com.appsbyjimmy.registrodealumons.SMSReceiver"> 
+          <intent-filter >
+              <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+          </intent-filter>
+            
+        </receiver>
     </application>
 
 </manifest>

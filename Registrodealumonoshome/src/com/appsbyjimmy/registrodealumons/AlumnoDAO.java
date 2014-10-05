@@ -103,4 +103,16 @@ public class AlumnoDAO extends SQLiteOpenHelper{
 		
 	}
 
+	public boolean isAlumno(String telefono) {
+		String[] args={telefono};
+		
+		Cursor cursor=getWritableDatabase().rawQuery("SELECT id FROM Alumnos WHERE telefono=?", args);
+		
+		
+		boolean existePrimero=cursor.moveToFirst();
+		
+		
+		return existePrimero;
+	}
+
 }
